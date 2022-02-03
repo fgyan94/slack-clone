@@ -16,9 +16,11 @@ import AddIcon from '@mui/icons-material/Add'
 import SidebarOption from '../SidebarOption'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { collection } from 'firebase/firestore'
-import { db } from '../../database/firebase'
+import { auth, db } from '../../database/firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 function Sidebar() {
+  const [user] = useAuthState(auth)
   const [channels, loading, error] = useCollection(collection(db, 'rooms'))
 
   const compare = (a, b) => {
@@ -42,7 +44,7 @@ function Sidebar() {
           <h2>SL BRASIL</h2>
           <h3>
             <FiberManualRecordIcon />
-            Yan Gonçalves
+            {user?.displayName}
           </h3>
         </S.SidebarInfo>
         <CreateIcon />

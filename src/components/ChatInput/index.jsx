@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import { collection, serverTimestamp, doc, setDoc } from 'firebase/firestore'
-import { db } from '../../database/firebase'
+import { auth, db } from '../../database/firebase'
+
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 import * as S from './styles'
 
 function ChatInput({ chatRef, channelId, channelName }) {
+  const [user] = useAuthState(auth)
   const [message, setMessage] = useState('')
 
   const sendMessage = async (e) => {
@@ -20,9 +23,8 @@ function ChatInput({ chatRef, channelId, channelName }) {
     setDoc(docMessage, {
       message: message,
       timestamp: serverTimestamp(),
-      user: 'Sonny Sangha',
-      userImage:
-        'https://pbs.twimg.com/profile_images/1339192504382590976/2WxMn8cm_400x400.jpg'
+      user: user?.displayName,
+      userImage: user?.photoURL
     })
 
     setMessage('')
